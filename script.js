@@ -21,6 +21,28 @@ function addcardOnMylist(data) {
     let name = data.title
     H5.innerHTML = name
     inone.appendChild(H5)
+    let button = document.createElement('button')
+    button.classList.add('btn')
+    button.classList.add('btn-success')
+    button.setAttribute('type','button')
+    button.innerText = 'detail'
+    button.addEventListener('click',function(){
+
+    })
+    let buttond = document.createElement('button')
+    buttond.classList.add('btn')
+    buttond.classList.add('btn-danger')
+    buttond.setAttribute('type','button')
+    buttond.innerText = 'delete'
+    buttond.addEventListener('click',function (){
+        var r = confirm(`delete ${name} On MyList`);
+        if (r == true) {
+
+            deleteMovie(data.id)
+        }
+    })
+
+
 
 
 
@@ -28,6 +50,8 @@ function addcardOnMylist(data) {
 
     one.appendChild(img)
     one.appendChild(inone)
+    one.appendChild(button)
+    one.appendChild(buttond)
     Allmight.appendChild(one)
     output1.appendChild(Allmight)
 }
@@ -39,12 +63,32 @@ function MyList(dataList) {
     }
 }
 function onLoad() {
-    fetch('https://se104-project-backend.du.r.appspot.com/movies/601232100')
+    fetch('https://se104-project-backend.du.r.appspot.com/movies/632110358')
         .then((response) => {
             return response.json()
-        }).then((data => {
+        }).then(data => {
             MyList(data)
-        }))
+        })
+}
+function deleteMovie(id){
+    fetch(`https://se104-project-backend.du.r.appspot.com/movie?id=632110358&&movieId=${id}`,{
+        method :'DELETE'
+    }).then(response => {
+        if(response.status === 200){
+            return response.json()
+        }else {
+            throw Error(response.statusText)
+        }
+    }).then(data =>{
+        alert(`${data.title} is now delete`)
+    }).catch( error =>{
+        alert ('Error')
+    })
+}
+function showDetail(data){
+    let Allmight = document.createElement('div')
+    Allmight.classList.add('')
+
 }
 
 // ----------------------------------- Search Page -----------------------------------------------------------------------------------------------\\
@@ -104,7 +148,7 @@ function addcard(data) {
         var r = confirm(`Add ${name} to MyList`);
         if (r == true) {
 
-            addtoMylistToDB(data.id)
+            addtoMylistToDB(data)
         }
     })
     output2.appendChild(Allmight)
@@ -113,22 +157,34 @@ function addtoMylistToDB(data) {
     fetch('https://se104-project-backend.du.r.appspot.com/movies', {
         method: 'POST',
         headers: {
-            "url": `${data.url}`,
-            "image_url": `${data.image_url}`,
-            "title": `${data.title}`,
-            "synopsis": `${data.synopsis}`,
-            "type": `${data.type}`,
-            "episodes": data.episodes,
-            "score": data.score,
-            "rated": `${data.rated}`,
-            "mal_id": `${data.mal_id}`
+            // "url": `${data.url}`,
+            // "image_url": `${data.image_url}`,
+            // "title": `${data.title}`,
+            // "synopsis": `${data.synopsis}`,
+            // "type": `${data.type}`,
+            // "episodes": data.episodes,
+            // "score": data.score,
+            // "rated": `${data.rated}`,
+            "id": "632110358",
+            "movie": {
+
+                "url": `https://myanimelist.net/anime/10396/Ben-To`,
+                "image_url": `https://cdn.myanimelist.net/images/anime/12/73984.jpg?s=fae35d639922f1987b76ef8962779c10`,
+                "title": `Ben-To`,
+                "synopsis": `The supermarket is an important building in any city, for they provide a convenient way to purchase a variety of food in a family-friendly, safe environment. However, these stores changes in the blink...`,
+                "type": `TV`,
+                "episodes": 12,
+                "score": 7.25,
+                "rated": `PG-13`,
+            }
+
         },
         body: JSON.stringify(data)
     })
         .then((response) => {
-            if(response.status === 200){
+            if (response.status === 200) {
                 return response.json()
-            }else{
+            } else {
                 throw Error(response.statusText)
             }
         }).then((data => {
