@@ -1,5 +1,5 @@
 /* .container{
-    border: 1px solid black;
+    border: 1px solid white;
     
 } */
 /* div{
@@ -19,4 +19,7 @@ div.card{
 div.row{
     color: white;
 
+}
+.myset{
+    min-height: 40em;
 }

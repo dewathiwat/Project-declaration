@@ -128,13 +128,13 @@ function showDetail(data){
     
     let row1 = document.createElement('div')
     row1.classList.add('row')
-    row1.innerHTML = ` Name : ${title} <br>
+    row1.innerHTML = `<h4> Name : ${title} <br>
                           Type : ${type} <br>
                           Episodes : ${episodes} <br>
                           Rated : ${rated} <br>
                           Score : ${score} <br>
                           Url :<a href="${url}"> ${url}</a> <br>    
-                          ${synopsis}`
+                          ${synopsis} </h4>`
 
 
 
@@ -232,7 +232,7 @@ function addcard(movie) {
             console.log(alldata)
             addtoMylistToDB(alldata)
             output1.innerHTML=''
-            onLoad()
+            
         }
     })
     output1.appendChild(Allmight)
@@ -252,6 +252,7 @@ function addtoMylistToDB(al) {
         }
     }).then(data => {
         console.log(data)
+        onLoad()
         
     })
 }
