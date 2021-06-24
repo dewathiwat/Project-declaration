@@ -40,7 +40,10 @@ function addcardOnMylist(data) {
         if (r == true) {
 
             deleteMovie(data.id)
+            output1.innerHTML=''
         }
+        
+        
     })
 
 
@@ -82,6 +85,7 @@ function deleteMovie(id){
         }
     }).then(data =>{
         alert(`${data.title} is now delete`)
+        onLoad()
     }).catch( error =>{
         alert ('Error')
     })
@@ -143,7 +147,7 @@ function showDetail(data){
     button.classList.add('btn')
     button.classList.add('btn-success')
     button.setAttribute('type','button')
-    button.innerText = 'back'
+    button.innerText = 'Back'
     button.addEventListener('click',function (){
         output1.innerHTML=''
         onLoad()
@@ -172,7 +176,7 @@ function showDetail(data){
 document.getElementById('submit').addEventListener('click', function (e) {
     var search = document.getElementById('search').value
     console.log(search)
-    output2.innerHTML=''
+    output1.innerHTML=''
     fetch(`https://api.jikan.moe/v3/search/anime?q=${search}`)
         .then((response) => {
             console.log('not found')
@@ -225,9 +229,11 @@ function addcard(data) {
         if (r == true) {
 
             addtoMylistToDB(data)
+            output1.innerHTML=''
+            onLoad()
         }
     })
-    output2.appendChild(Allmight)
+    output1.appendChild(Allmight)
 }
 function addtoMylistToDB(data) {
     fetch('https://se104-project-backend.du.r.appspot.com/movies', {
