@@ -1,5 +1,6 @@
 
 var output1 = document.getElementById('output1')
+var id = 632110358
 // ----------------------------------- Mylist Page -----------------------------------------------------------------------------------------------\\
 
 function addcardOnMylist(data) {
@@ -132,7 +133,7 @@ function showDetail(data){
                           Episodes : ${episodes} <br>
                           Rated : ${rated} <br>
                           Score : ${score} <br>
-                          Url : ${url} <br>
+                          Url :<a href="${url}"> ${url}</a> <br>    
                           ${synopsis}`
 
 
@@ -145,7 +146,7 @@ function showDetail(data){
     col2.classList.add('col-2')
     let button = document.createElement('button')
     button.classList.add('btn')
-    button.classList.add('btn-success')
+    button.classList.add('btn-warning')
     button.setAttribute('type','button')
     button.innerText = 'Back'
     button.addEventListener('click',function (){
@@ -176,26 +177,26 @@ function showDetail(data){
 document.getElementById('submit').addEventListener('click', function (e) {
     var search = document.getElementById('search').value
     console.log(search)
+    if(search!=''){
     output1.innerHTML=''
+    }
     fetch(`https://api.jikan.moe/v3/search/anime?q=${search}`)
         .then((response) => {
-            console.log('not found')
-
             return response.json()
         }).then((data => {
-            Search(data)
+            Search(data.results)
         }))
 
 })
 function Search(dataList) {
 
-    for (data of dataList.results) {
+    for (data of dataList) {
 
         addcard(data)
 
     }
 }
-function addcard(data) {
+function addcard(movie) {
 
     let Allmight = document.createElement('div')
     Allmight.classList.add("col-3")
@@ -205,14 +206,14 @@ function addcard(data) {
 
     let img = document.createElement('img')
     img.classList.add("card-img-top")
-    let imgname = data.image_url
+    let imgname = movie.image_url
     img.setAttribute('src', imgname)
 
     let inone = document.createElement('div')
     inone.classList.add("card-body")
     let H5 = document.createElement('h5')
     H5.classList.add("card-title")
-    let name = data.title
+    let name = movie.title
     H5.innerHTML = name
     inone.appendChild(H5)
 
@@ -227,50 +228,31 @@ function addcard(data) {
         console.log(data)
         var r = confirm(`Add ${name} to MyList`);
         if (r == true) {
-
-            addtoMylistToDB(data)
+            alldata={id,movie}
+            console.log(alldata)
+            addtoMylistToDB(alldata)
             output1.innerHTML=''
             onLoad()
         }
     })
     output1.appendChild(Allmight)
 }
-function addtoMylistToDB(data) {
-    fetch('https://se104-project-backend.du.r.appspot.com/movies', {
+function addtoMylistToDB(al) {
+    fetch(`https://se104-project-backend.du.r.appspot.com/movies`, {
         method: 'POST',
         headers: {
-            // "url": `${data.url}`,
-            // "image_url": `${data.image_url}`,
-            // "title": `${data.title}`,
-            // "synopsis": `${data.synopsis}`,
-            // "type": `${data.type}`,
-            // "episodes": data.episodes,
-            // "score": data.score,
-            // "rated": `${data.rated}`,
-            "id": "632110358",
-            "movie": {
-
-                "url": `https://myanimelist.net/anime/10396/Ben-To`,
-                "image_url": `https://cdn.myanimelist.net/images/anime/12/73984.jpg?s=fae35d639922f1987b76ef8962779c10`,
-                "title": `Ben-To`,
-                "synopsis": `The supermarket is an important building in any city, for they provide a convenient way to purchase a variety of food in a family-friendly, safe environment. However, these stores changes in the blink...`,
-                "type": `TV`,
-                "episodes": 12,
-                "score": 7.25,
-                "rated": `PG-13`,
-            }
-
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(al)
+    }).then((response) => {
+        if (response.status === 200) {
+            return response.json()
+        } else {
+            throw Error(response.statusText)
+        }
+    }).then(data => {
+        console.log(data)
+        
     })
-        .then((response) => {
-            if (response.status === 200) {
-                return response.json()
-            } else {
-                throw Error(response.statusText)
-            }
-        }).then((data => {
-            console.log('success', data)
-        }))
 }
 
